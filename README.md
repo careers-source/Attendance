@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏢 Office Attendance Management System (AttendX.io)
 
 A modern, full-stack, production-ready **Office Attendance Management System** built with **Python (Flask)**, **SQLite**, **HTML5**, **CSS3**, and **JavaScript (ES6)**.
@@ -151,3 +152,6 @@ git push -u origin main
 
 ## 📄 License
 This project is open-source and available under the [MIT License](LICENSE).
+=======
+# Attendance
+>>>>>>> 5d538d1a28a5f6a6b62ecdf4ef730d03e34a9c7b
