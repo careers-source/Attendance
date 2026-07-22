@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Office Attendance System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
+      padding: 1.5rem;
+    }
+    .login-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      color: var(--text-main);
+    }
+    .login-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .login-brand .logo {
+      width: 44px;
+      height: 44px;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.5rem;
+    }
+    .login-brand h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .demo-credentials-box {
+      background: rgba(79, 70, 229, 0.08);
+      border: 1px dashed var(--primary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      font-size: 0.82rem;
+    }
+    .demo-chip {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: 0.4rem;
+      margin-right: 0.4rem;
+      font-weight: 600;
+    }
+    .demo-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo">A</div>
+      <h1>AttendX System</h1>
+    </div>
+
+    <p class="text-center text-muted mb-4" style="font-size:0.9rem;">Sign in to access your attendance workspace</p>
+
+    <form id="login-form">
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Email Address</label>
+        <input type="email" id="login-email" class="form-control" style="width:100%" placeholder="name@office.com" required>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Password</label>
+        <input type="password" id="login-password" class="form-control" style="width:100%" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:0.8rem;font-size:1rem;">
+        <i class="ri-login-circle-line"></i> Sign In to Portal
+      </button>
+    </form>
+
+    <div class="demo-credentials-box">
+      <strong style="color:var(--primary);"><i class="ri-key-line"></i> Quick Demo Accounts:</strong>
+      <div style="margin-top:0.4rem;">
+        <span class="demo-chip" onclick="fillLogin('admin@office.com', 'Admin@123')">🔑 Admin (admin@office.com)</span>
+        <span class="demo-chip" onclick="fillLogin('emp1@office.com', 'Emp@123')">👤 Employee (emp1@office.com)</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script>
+    function fillLogin(email, password) {
+      document.getElementById('login-email').value = email;
+      document.getElementById('login-password').value = password;
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const res = await apiFetch('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        
+        localStorage.setItem('jwt_token', res.token);
+        showToast('Login successful! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 600);
+      } catch (err) {
+        showToast(err.message, 'danger');
+      }
+    });
+  </script>
+</body>
+</html>

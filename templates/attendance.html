@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Log - Office Attendance System{% endblock %}
+{% block header_title %}Attendance Log & History{% endblock %}
+
+{% block content %}
+
+<!-- Filters Header -->
+<div class="filter-bar">
+  <div class="filter-inputs">
+    <div class="admin-only" style="display:none;align-items:center;gap:0.5rem;">
+      <label style="font-size:0.85rem;font-weight:600;">Date:</label>
+      <input type="date" id="global-att-date" class="form-control" onchange="loadGlobalAttendance()">
+    </div>
+
+    <div class="employee-only">
+      <label style="font-size:0.85rem;font-weight:600;">Month:</label>
+      <input type="month" id="history-month-filter" class="form-control" onchange="loadAttendanceHistory()">
+    </div>
+
+    <div class="admin-only" style="display:none;">
+      <select id="global-att-dept" class="form-control" onchange="loadGlobalAttendance()">
+        <option value="">All Departments</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Management">Management</option>
+        <option value="General">General</option>
+      </select>
+    </div>
+
+    <div class="admin-only" style="display:none;">
+      <select id="global-att-status" class="form-control" onchange="loadGlobalAttendance()">
+        <option value="">All Statuses</option>
+        <option value="Present">Present</option>
+        <option value="Late">Late</option>
+        <option value="Half Day">Half Day</option>
+        <option value="Absent">Absent</option>
+        <option value="On Leave">On Leave</option>
+      </select>
+    </div>
+
+    <div class="admin-only" style="display:none;">
+      <input type="text" id="global-att-search" class="form-control" placeholder="Search employee name/ID..." onkeyup="loadGlobalAttendance()">
+    </div>
+  </div>
+
+  <div>
+    <button class="btn btn-outline btn-sm" onclick="location.reload()">
+      <i class="ri-refresh-line"></i> Refresh
+    </button>
+  </div>
+</div>
+
+<!-- Employee Attendance View -->
+<div class="card employee-only">
+  <div class="card-header">
+    <h3 class="card-title"><i class="ri-history-line"></i> My Monthly Attendance History</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Break Time</th>
+          <th>Net Working Hours</th>
+          <th>Status</th>
+          <th>Late Flag</th>
+        </tr>
+      </thead>
+      <tbody id="attendance-history-tbody">
+        <tr><td colspan="7" class="text-center py-4 text-muted">Loading attendance logs...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Admin Global Attendance Monitor View -->
+<div class="card admin-only" style="display:none;">
+  <div class="card-header">
+    <h3 class="card-title"><i class="ri-global-line"></i> Global Employee Attendance Records</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Emp ID</th>
+          <th>Employee Name</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Break Time</th>
+          <th>Net Hours</th>
+          <th>Status</th>
+          <th>Late Flag</th>
+        </tr>
+      </thead>
+      <tbody id="global-attendance-tbody">
+        <tr><td colspan="9" class="text-center py-4 text-muted">Loading organization attendance logs...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

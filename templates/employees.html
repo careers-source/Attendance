@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Directory - Office Attendance System{% endblock %}
+{% block header_title %}Employee Management{% endblock %}
+
+{% block content %}
+
+<!-- Admin Filter & Add Button Bar -->
+<div class="filter-bar admin-only">
+  <div class="filter-inputs">
+    <input type="text" id="emp-search-input" class="form-control" placeholder="Search by name, ID, or email..." onkeyup="loadEmployees()">
+    <select id="emp-dept-filter" class="form-control" onchange="loadEmployees()">
+      <option value="">All Departments</option>
+      <option value="Engineering">Engineering</option>
+      <option value="Marketing">Marketing</option>
+      <option value="Human Resources">Human Resources</option>
+      <option value="Management">Management</option>
+      <option value="General">General</option>
+    </select>
+  </div>
+
+  <div>
+    <button class="btn btn-primary" onclick="openAddEmployeeModal()">
+      <i class="ri-user-add-line"></i> Add New Employee
+    </button>
+  </div>
+</div>
+
+<!-- Employee List Table -->
+<div class="card admin-only">
+  <div class="card-header">
+    <h3 class="card-title"><i class="ri-team-line"></i> Staff Directory & Accounts</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Emp ID</th>
+          <th>Employee Name & Email</th>
+          <th>Department</th>
+          <th>Designation</th>
+          <th>System Role</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="employees-tbody">
+        <tr><td colspan="7" class="text-center py-4 text-muted">Loading employee records...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal-backdrop" id="add-employee-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size:1.15rem;font-weight:700;"><i class="ri-user-add-line"></i> Register New Staff Member</h3>
+      <button class="close-btn" onclick="closeModal('add-employee-modal')">&times;</button>
+    </div>
+    <form id="add-emp-form" onsubmit="submitAddEmployee(event)">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Employee ID</label>
+            <input type="text" id="new_emp_id" class="form-control" style="width:100%" placeholder="EMP004" required>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Full Name</label>
+            <input type="text" id="new_emp_name" class="form-control" style="width:100%" placeholder="John Doe" required>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Email Address</label>
+            <input type="email" id="new_emp_email" class="form-control" style="width:100%" placeholder="john@office.com" required>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Password</label>
+            <input type="password" id="new_emp_password" class="form-control" style="width:100%" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Department</label>
+            <select id="new_emp_dept" class="form-control" style="width:100%">
+              <option value="Engineering">Engineering</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Management">Management</option>
+              <option value="General">General</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Designation</label>
+            <input type="text" id="new_emp_designation" class="form-control" style="width:100%" placeholder="Software Engineer">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">System Role</label>
+            <select id="new_emp_role" class="form-control" style="width:100%">
+              <option value="employee" selected>Employee</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Phone Number</label>
+            <input type="text" id="new_emp_phone" class="form-control" style="width:100%" placeholder="9876543210">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('add-employee-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Create Account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Employee Modal -->
+<div class="modal-backdrop" id="edit-employee-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size:1.15rem;font-weight:700;"><i class="ri-edit-line"></i> Edit Staff Account</h3>
+      <button class="close-btn" onclick="closeModal('edit-employee-modal')">&times;</button>
+    </div>
+    <form id="edit-emp-form" onsubmit="submitEditEmployee(event)">
+      <input type="hidden" id="edit_emp_user_id">
+      <div class="modal-body">
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Full Name</label>
+          <input type="text" id="edit_emp_name" class="form-control" style="width:100%" required>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Department</label>
+            <select id="edit_emp_dept" class="form-control" style="width:100%">
+              <option value="Engineering">Engineering</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Management">Management</option>
+              <option value="General">General</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Designation</label>
+            <input type="text" id="edit_emp_designation" class="form-control" style="width:100%">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Role</label>
+            <select id="edit_emp_role" class="form-control" style="width:100%">
+              <option value="employee">Employee</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Phone</label>
+            <input type="text" id="edit_emp_phone" class="form-control" style="width:100%">
+          </div>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem;">Reset Password (Optional)</label>
+          <input type="password" id="edit_emp_password" class="form-control" style="width:100%" placeholder="Leave blank to keep unchanged">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('edit-employee-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

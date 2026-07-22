@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: office-attendance-system
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python seed.py
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.5

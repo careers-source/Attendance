@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Office Attendance System{% endblock %}
+{% block header_title %}Attendance Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- EMPLOYEE DASHBOARD SECTION -->
+<div id="employee-dashboard-section">
+  <!-- Live Clock & Punch Action Card -->
+  <div class="card punch-card">
+    <div class="card-header" style="margin-bottom:0.5rem;">
+      <div>
+        <h3 class="card-title"><i class="ri-time-line"></i> Today's Shift & Break Control</h3>
+        <p class="text-muted" id="live-date" style="font-size:0.85rem;margin-top:0.2rem;">Loading date...</p>
+      </div>
+      <span class="badge badge-absent" id="today-status-badge">Loading...</span>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem;margin-top:1rem;">
+      <div>
+        <div style="font-size:0.85rem;color:var(--text-muted);font-weight:600;">Current Local Time</div>
+        <div class="timer-display" id="live-clock">00:00:00 AM</div>
+        
+        <div style="display:flex;gap:1.5rem;font-size:0.88rem;">
+          <div><i class="ri-login-box-line" style="color:var(--success)"></i> Check In: <strong id="today-checkin-time">--:--</strong></div>
+          <div><i class="ri-logout-box-line" style="color:var(--danger)"></i> Check Out: <strong id="today-checkout-time">--:--</strong></div>
+          <div><i class="ri-timer-line" style="color:var(--primary)"></i> Net Hours: <strong id="today-net-hours">0.0 hrs</strong></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:200px;">
+        <button class="btn btn-success" id="btn-checkin" onclick="handleCheckIn()">
+          <i class="ri-fingerprint-line"></i> Punch Check In
+        </button>
+        <button class="btn btn-danger" id="btn-checkout" onclick="handleCheckOut()" disabled>
+          <i class="ri-door-lock-line"></i> Punch Check Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Break Controls Section (Morning Tea, Lunch, Afternoon Tea) -->
+    <div id="break-controls-container" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px dashed var(--border-color);display:none;">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;">
+        <i class="ri-cup-line"></i> TAKE A BREAK
+      </div>
+      <div class="break-buttons-group">
+        <button class="btn btn-outline" onclick="handleStartBreak('morning_tea')">
+          <i class="ri-cup-line"></i> Morning Tea Break (15m)
+        </button>
+        <button class="btn btn-outline" onclick="handleStartBreak('lunch')">
+          <i class="ri-restaurant-line"></i> Lunch Break (45m)
+        </button>
+        <button class="btn btn-outline" onclick="handleStartBreak('afternoon_tea')">
+          <i class="ri-goblet-line"></i> Afternoon Tea Break (15m)
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Break In Progress Banner -->
+    <div id="active-break-box" style="margin-top:1.5rem;padding:1.25rem;background:var(--warning-light);border:1px solid var(--warning);border-radius:var(--radius-md);display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <div style="font-weight:800;color:var(--warning-text);font-size:1rem;" id="active-break-title">ON BREAK</div>
+          <div style="font-size:0.85rem;color:var(--warning-text);">Break Duration: <strong id="active-break-timer-display" style="font-family:monospace;font-size:1.1rem;">00:00</strong></div>
+        </div>
+        <button class="btn btn-warning" onclick="handleEndBreak()">
+          <i class="ri-stop-circle-line"></i> Resume Work (End Break)
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Employee Stat Summary Cards -->
+  <div class="grid-4">
+    <div class="stat-card">
+      <div class="stat-icon icon-purple"><i class="ri-calendar-event-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-present-days">0</div>
+        <div class="stat-label">Present Days This Month</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-amber"><i class="ri-time-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-late-days">0</div>
+        <div class="stat-label">Late Arrivals</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-blue"><i class="ri-time-fill"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-total-hours">0h</div>
+        <div class="stat-label">Total Net Hours</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-green"><i class="ri-flight-takeoff-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-pending-leaves">0</div>
+        <div class="stat-label">Pending Leave Requests</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN ANALYTICS DASHBOARD SECTION (Admin Only) -->
+<div id="admin-stats-section" style="display:none;margin-top:2rem;">
+  <div class="card-header" style="margin-bottom:1.5rem;">
+    <h3 class="card-title" style="font-size:1.25rem;"><i class="ri-admin-line" style="color:var(--primary)"></i> Organization Overview & Analytics</h3>
+  </div>
+
+  <div class="grid-4">
+    <div class="stat-card">
+      <div class="stat-icon icon-purple"><i class="ri-group-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="admin-total-employees">0</div>
+        <div class="stat-label">Total Active Staff</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-green"><i class="ri-user-check-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="admin-present-today">0</div>
+        <div class="stat-label">Present Today</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-amber"><i class="ri-alarm-warning-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="admin-late-today">0</div>
+        <div class="stat-label">Late Today</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon icon-red"><i class="ri-file-list-3-line"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="admin-pending-leaves">0</div>
+        <div class="stat-label">Pending Leaves</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Charts Grid -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title"><i class="ri-pie-chart-line"></i> Monthly Attendance Distribution</h4>
+      </div>
+      <div style="max-height: 280px; display:flex; align-items:center; justify-content:center;">
+        <canvas id="monthlyAttendanceChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title"><i class="ri-bar-chart-fill"></i> Department Staff Headcount</h4>
+      </div>
+      <div style="max-height: 280px; display:flex; align-items:center; justify-content:center;">
+        <canvas id="deptDistributionChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

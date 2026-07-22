@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Office Attendance Management System{% endblock %}</title>
+  
+  <!-- Remix Icons & Chart.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Custom Core Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">A</div>
+        <div class="brand-title">AttendX<span style="color:var(--primary)">.io</span></div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-item {% if request.path == '/dashboard' %}active{% endif %}">
+          <i class="ri-dashboard-3-line"></i> <span>Dashboard</span>
+        </a>
+        
+        <a href="/attendance" class="nav-item {% if request.path == '/attendance' %}active{% endif %}">
+          <i class="ri-calendar-check-line"></i> <span>Attendance Log</span>
+        </a>
+        
+        <a href="/leaves" class="nav-item {% if request.path == '/leaves' %}active{% endif %}">
+          <i class="ri-flight-takeoff-line"></i> <span>Leaves</span>
+        </a>
+
+        <!-- Admin Exclusive Links -->
+        <a href="/employees" class="nav-item admin-only {% if request.path == '/employees' %}active{% endif %}" style="display:none;">
+          <i class="ri-team-line"></i> <span>Employees</span>
+        </a>
+
+        <a href="/reports" class="nav-item admin-only {% if request.path == '/reports' %}active{% endif %}" style="display:none;">
+          <i class="ri-file-chart-line"></i> <span>Reports & Export</span>
+        </a>
+
+        <a href="/profile" class="nav-item {% if request.path == '/profile' %}active{% endif %}">
+          <i class="ri-user-settings-line"></i> <span>My Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="user-avatar user-avatar-display">U</div>
+          <div class="user-info">
+            <div class="user-name user-name-display">Loading...</div>
+            <div class="user-role user-role-display">Staff</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2>{% block header_title %}Dashboard{% endblock %}</h2>
+        </div>
+        <div class="header-right">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+            <i class="ri-moon-line"></i>
+          </button>
+          <button class="btn-logout" onclick="logoutUser()">
+            <i class="ri-logout-box-r-line"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <!-- Global Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/employee.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports & Exports - Office Attendance System{% endblock %}
+{% block header_title %}Reports & Data Exports{% endblock %}
+
+{% block content %}
+
+<div class="card admin-only">
+  <div class="card-header">
+    <h3 class="card-title"><i class="ri-file-download-line"></i> Generate Custom Attendance Exports</h3>
+  </div>
+
+  <p class="text-muted mb-4" style="font-size:0.9rem;">
+    Filter and download complete attendance records, total working hours, late arrivals, and break durations in professional Excel (.xlsx) or print-ready PDF formats.
+  </p>
+
+  <div style="background:var(--bg-body);padding:1.5rem;border-radius:var(--radius-md);border:1px solid var(--border-color);margin-bottom:1.5rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:1.25rem;align-items:end;">
+      <div>
+        <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.4rem;">Select Target Month</label>
+        <input type="month" id="report-month-select" class="form-control" style="width:100%">
+      </div>
+
+      <div>
+        <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.4rem;">Select Department Filter</label>
+        <select id="report-dept-select" class="form-control" style="width:100%">
+          <option value="">All Departments</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Human Resources">Human Resources</option>
+          <option value="Management">Management</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;">
+        <button class="btn btn-success" style="flex:1;" onclick="triggerExcelExport()">
+          <i class="ri-file-excel-2-line"></i> Export Excel (.xlsx)
+        </button>
+        <button class="btn btn-danger" style="flex:1;" onclick="triggerPdfExport()">
+          <i class="ri-file-pdf-line"></i> Export PDF Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-card" style="background:linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(16, 185, 129, 0.05));">
+    <div class="stat-icon icon-purple"><i class="ri-shield-check-line"></i></div>
+    <div class="stat-info">
+      <div style="font-weight:700;font-size:0.95rem;">Automated Metric Compliance</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);">
+        All exports dynamically include net working hours after deducting Morning Tea, Lunch, and Afternoon Tea breaks, with clear late arrival annotations.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
