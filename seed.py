@@ -8,22 +8,22 @@ def seed_database():
     cursor = conn.cursor()
 
     # Passwords
-    admin_pw = generate_password_hash('Admin@123')
+    admin_pw = generate_password_hash('Prathmesh@1234')
     emp_pw = generate_password_hash('Emp@123')
 
     # Insert or Update Default Users
     users_data = [
-        ('ADM001', 'System Administrator', 'admin@office.com', admin_pw, 'admin', 'Management', 'Lead Admin', '9876543210', '2024-01-01'),
+        ('ADM001', 'Prathmesh', 'prathmesh@office.com', admin_pw, 'admin', 'Management', 'Lead Admin', '9876543210', '2024-01-01'),
         ('EMP001', 'Sarah Jenkins', 'emp1@office.com', emp_pw, 'employee', 'Engineering', 'Senior Developer', '9876543211', '2024-02-15'),
         ('EMP002', 'Michael Chen', 'emp2@office.com', emp_pw, 'employee', 'Marketing', 'Marketing Specialist', '9876543212', '2024-03-01'),
         ('EMP003', 'David Smith', 'emp3@office.com', emp_pw, 'employee', 'Human Resources', 'HR Coordinator', '9876543213', '2024-04-10')
     ]
 
     for emp_id, name, email, pw, role, dept, desig, phone, join_d in users_data:
-        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        cursor.execute("SELECT id FROM users WHERE employee_id = ?", (emp_id,))
         row = cursor.fetchone()
         if row:
-            cursor.execute("UPDATE users SET password_hash = ?, role = ?, name = ? WHERE id = ?", (pw, role, name, row['id']))
+            cursor.execute("UPDATE users SET password_hash = ?, role = ?, name = ?, email = ? WHERE id = ?", (pw, role, name, email, row['id']))
         else:
             cursor.execute('''
                 INSERT INTO users (employee_id, name, email, password_hash, role, department, designation, phone, join_date)
