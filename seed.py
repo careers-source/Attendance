@@ -56,13 +56,13 @@ def seed_database():
             status = statuses[(idx + user_id) % len(statuses)]
             is_late = 1 if status == 'Late' else 0
             
-            check_in_hour = 9 if not is_late else 9
+            check_in_hour = 10 if not is_late else 10
             check_in_min = 5 if not is_late else 35
             check_in_str = f"{past_date} 0{check_in_hour}:{check_in_min}:00"
             
-            check_out_str = f"{past_date} 17:00:00" if status != 'Half Day' else f"{past_date} 13:00:00"
-            total_hours = 8.0 if status != 'Half Day' else 4.0
-            break_mins = 60
+            check_out_str = f"{past_date} 19:00:00" if status != 'Half Day' else f"{past_date} 14:00:00"
+            total_hours = 9.0 if status != 'Half Day' else 4.0
+            break_mins = 90
             net_hours = total_hours - (break_mins / 60.0)
 
             cursor.execute('''
@@ -77,12 +77,17 @@ def seed_database():
                 cursor.execute('''
                     INSERT INTO breaks (attendance_id, user_id, break_type, start_time, end_time, duration_mins, status)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (att_id, user_id, 'lunch', f"{past_date} 13:00:00", f"{past_date} 13:45:00", 45, 'completed'))
+                ''', (att_id, user_id, 'lunch', f"{past_date} 13:00:00", f"{past_date} 14:00:00", 60, 'completed'))
 
                 cursor.execute('''
                     INSERT INTO breaks (attendance_id, user_id, break_type, start_time, end_time, duration_mins, status)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 ''', (att_id, user_id, 'morning_tea', f"{past_date} 11:00:00", f"{past_date} 11:15:00", 15, 'completed'))
+
+                cursor.execute('''
+                    INSERT INTO breaks (attendance_id, user_id, break_type, start_time, end_time, duration_mins, status)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (att_id, user_id, 'evening_tea', f"{past_date} 17:00:00", f"{past_date} 17:15:00", 15, 'completed'))
 
 
     # Sample Leaves

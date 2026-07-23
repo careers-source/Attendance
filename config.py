@@ -9,11 +9,11 @@ class Config:
     DATABASE_PATH = os.path.join(BASE_DIR, 'attendance.db')
     
     # Office Shift Configuration
-    SHIFT_START_TIME = '09:00:00'  # 9:00 AM
-    SHIFT_END_TIME = '17:00:00'    # 5:00 PM
-    GRACE_PERIOD_MINUTES = 15      # Marked late after 9:15 AM
+    SHIFT_START_TIME = '10:00:00'  # 10:00 AM
+    SHIFT_END_TIME = '19:00:00'    # 7:00 PM
+    GRACE_PERIOD_MINUTES = 15      # Marked late after 10:15 AM
     
     # Standard Break Limits (in minutes)
     MORNING_TEA_MAX_MINS = 15
-    LUNCH_MAX_MINS = 45
+    LUNCH_MAX_MINS = 60
     AFTERNOON_TEA_MAX_MINS = 15
