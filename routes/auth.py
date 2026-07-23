@@ -76,7 +76,22 @@ def login():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users WHERE LOWER(email) = ?", (email,))
     user = cursor.fetchone()
+
+    # If database is unseeded or missing default accounts, run seed_database once
+    if not user:
+        from seed import seed_database
+        conn.close()
+        try:
+            seed_database()
+        except Exception as e:
+            print(f"Auto-seed exception: {e}")
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE LOWER(email) = ?", (email,))
+        user = cursor.fetchone()
+
     conn.close()
+
 
     if not user or not check_password_hash(user['password_hash'], password):
         return jsonify({'error': 'Invalid email or password'}), 401

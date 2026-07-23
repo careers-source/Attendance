@@ -48,9 +48,13 @@ def reports_page():
 def profile_page():
     return render_template('profile.html')
 
-# Initialize DB when app starts
+from seed import seed_database
+
+# Initialize DB & auto-seed when app starts
 with app.app_context():
     init_db()
+    seed_database()
+
 
 import os
 
