@@ -14,7 +14,7 @@ def seed_database():
     # Insert or Update Default Users
     users_data = [
         ('ADM001', 'Prathmesh', 'prathmesh@office.com', admin_pw, 'admin', 'Management', 'Lead Admin', '9876543210', '2024-01-01'),
-        ('EMP001', 'Sarah Jenkins', 'emp1@office.com', emp_pw, 'employee', 'Engineering', 'Senior Developer', '9876543211', '2024-02-15'),
+        ('EMP001', 'Sagar M ', 'sagar@office.com', emp_pw, 'employee', 'General', 'Python Developer', '9699056940', '2026-07-13'),
         ('EMP002', 'Michael Chen', 'emp2@office.com', emp_pw, 'employee', 'Marketing', 'Marketing Specialist', '9876543212', '2024-03-01'),
         ('EMP003', 'David Smith', 'emp3@office.com', emp_pw, 'employee', 'Human Resources', 'HR Coordinator', '9876543213', '2024-04-10')
     ]
